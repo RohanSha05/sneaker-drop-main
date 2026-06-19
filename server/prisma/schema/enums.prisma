@@ -1,0 +1,13 @@
+enum DropStatus {
+  SCHEDULED
+  ACTIVE
+  ENDED
+  SOLD_OUT
+}
+
+enum ReservationStatus {
+  ACTIVE
+  EXPIRED
+  COMPLETED
+  CANCELED
+}
