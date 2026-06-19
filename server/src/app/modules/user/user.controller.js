@@ -6,6 +6,7 @@ import { success } from "zod";
 
 const createUser = catchAsync(async( req, res )=>{
     const result = await UserService.createUser(req.body)
+    console.log(req.body)
     sendResponse(res, {
         statusCode: 201,
         success: true,
