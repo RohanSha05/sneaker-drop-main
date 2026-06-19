@@ -4,6 +4,11 @@ import { UserValidation } from './user.validation.js';
 
 const router = express.Router()
 
+router.get(
+  "/",
+  UserController.getAllUser
+)
+
 router.post(
   '/create-user',
   (req, res, next) => {

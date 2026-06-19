@@ -1,21 +1,19 @@
 model Reservation {
-  id         String             @id @default(uuid())
-  dropId     String
-  userId     String
-  status     ReservationStatus  @default(ACTIVE)
-  reservedAt DateTime           @default(now())
-  expiresAt  DateTime
-  releasedAt DateTime?
-  completedAt DateTime?
-  createdAt  DateTime           @default(now())
-  updatedAt  DateTime           @updatedAt
+  id          String            @id @default(uuid())
+  dropId      String            @map("drop_id")
+  userId      String            @map("user_id")
+  status      ReservationStatus @default(ACTIVE)
+  expiresAt   DateTime          @map("expires_at")
+  releasedAt  DateTime?         @map("released_at")   // audit: when it expired
+  completedAt DateTime?         @map("completed_at")  // audit: when purchased
+  createdAt   DateTime          @default(now())       @map("created_at")
+  updatedAt   DateTime          @updatedAt            @map("updated_at")
 
-  drop       Drop               @relation(fields: [dropId], references: [id], onDelete: Cascade)
-  user       User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  purchase   Purchase?
+  drop     Drop      @relation(fields: [dropId], references: [id], onDelete: Cascade)
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  purchase Purchase?
 
   @@index([dropId, status])
   @@index([expiresAt])
-  @@index([userId, dropId])
   @@map("reservations")
 }
