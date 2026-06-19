@@ -1,0 +1,21 @@
+model Reservation {
+  id         String             @id @default(uuid())
+  dropId     String
+  userId     String
+  status     ReservationStatus  @default(ACTIVE)
+  reservedAt DateTime           @default(now())
+  expiresAt  DateTime
+  releasedAt DateTime?
+  completedAt DateTime?
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+
+  drop       Drop               @relation(fields: [dropId], references: [id], onDelete: Cascade)
+  user       User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  purchase   Purchase?
+
+  @@index([dropId, status])
+  @@index([expiresAt])
+  @@index([userId, dropId])
+  @@map("reservations")
+}

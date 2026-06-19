@@ -1,0 +1,19 @@
+model Purchase {
+  id            String      @id @default(uuid())
+  dropId        String
+  userId        String
+  reservationId String      @unique
+  quantity      Int         @default(1)
+  amount        Float?
+  purchasedAt   DateTime    @default(now())
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  drop          Drop        @relation(fields: [dropId], references: [id], onDelete: Cascade)
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+
+  @@index([dropId, purchasedAt])
+  @@index([userId, purchasedAt])
+  @@map("purchases")
+}
