@@ -1,6 +1,7 @@
 import express from 'express'
 import { dropController } from './drop.controller.js';
 import { DropValidation } from './drop.validation.js';
+import validateRequest from '../../middlewares/validateRequest.js';
 
 const router = express.Router()
 
@@ -10,10 +11,8 @@ router.get(
 )
 router.post(
     '/create-drop',
-    (req, res, next) => {
-        req.body = DropValidation.createDropValidation.parse(req.body);
-        return dropController.createDrop(req, res, next);
-      }
+    validateRequest(DropValidation.createDropValidation),
+    dropController.createDrop
 )
 
 export const dropRoutes = router;

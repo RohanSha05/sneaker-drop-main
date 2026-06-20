@@ -1,20 +1,11 @@
 import { z } from "zod";
 
 const createDropValidation = z.object({
-	title: z
-		.string({
-			message: "Title is required",
-		})
-		.min(1, {
-			message: "Title is required",
-		}),
-
-	totalStock: z.number({
-		message: "Total stock is required",
-	}),
-
-	availableStock: z.number({
-		message: "Available stock is required",
+	body: z.object({
+		title: z.string({ message: 'Title is required' }).min(1, { message: 'Title is required' }),
+		description: z.string().optional(),
+		totalStock: z.coerce.number({ message: 'Total stock is required' }).int().positive(),
+		// startsAt: z.coerce.date({ message: 'Start time is required' }),
 	}),
 });
 

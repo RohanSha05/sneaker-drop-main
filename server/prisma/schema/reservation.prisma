@@ -15,5 +15,6 @@ model Reservation {
 
   @@index([dropId, status])
   @@index([expiresAt])
+  @@index([userId, dropId])
   @@map("reservations")
 }

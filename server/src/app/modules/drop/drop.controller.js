@@ -1,7 +1,5 @@
-import { request, response } from "express";
 import catchAsync from "../../../shared/catchAsync.js";
 import sendResponse from "../../../shared/sendResponse.js";
-import { success } from "zod";
 import { dropService } from "./drop.service.js";
 
 const createDrop = catchAsync(async( req, res )=>{
@@ -14,7 +12,8 @@ const createDrop = catchAsync(async( req, res )=>{
     })
 })
 const getAllDrops = catchAsync(async( req, res )=>{
-    const result = await dropService.getAllDrops(req.body)
+    const result = await dropService.getAllDrops()
+    console.log(result)
     sendResponse(res, {
         statusCode: 200,
         success: true,

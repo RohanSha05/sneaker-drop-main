@@ -3,6 +3,10 @@ import 'dotenv/config';
 import app from './app.js';
 import prisma from './shared/prisma.js';
 import config from './config/index.js';
+import initSocket from './socket/index.js';
+import reservationExpiryJob from './jobs/reservationExpiry.job.js';
+
+let activeServer;
 
 const startServer = async () => {
   try {
@@ -12,12 +16,13 @@ const startServer = async () => {
     let currentPort = Number(config.port) || 5000;
 
     const createAndListen = (port) => {
-      const server = http.createServer(app);
+      activeServer = http.createServer(app);
+      initSocket(activeServer);
 
-      server.on('error', async (error) => {
+      activeServer.on('error', async (error) => {
         if (error.code === 'EADDRINUSE') {
           console.log(`Port ${port} is busy, retrying on ${port + 1}...`);
-          server.close();
+          activeServer.close();
           createAndListen(port + 1);
           return;
         }
@@ -27,14 +32,13 @@ const startServer = async () => {
         process.exit(1);
       });
 
-      server.listen(port, () => {
+      activeServer.listen(port, () => {
         console.log(`Server running on port ${port}`);
       });
-
-      return server;
     };
 
     createAndListen(currentPort);
+    reservationExpiryJob();
   } catch (error) {
     console.error('Failed to start server:', error);
     await prisma.$disconnect();
@@ -44,6 +48,11 @@ const startServer = async () => {
 
 const shutdown = async () => {
   await prisma.$disconnect();
+  if (activeServer) {
+    activeServer.close(() => process.exit(0));
+    return;
+  }
+
   process.exit(0);
 };
 
