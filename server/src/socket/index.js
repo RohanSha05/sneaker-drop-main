@@ -6,7 +6,7 @@ let io;
 const initSocket = (httpServer) => {
   io = new Server(httpServer, {
     cors: {
-      origin: [config.clientUrl],
+      origin: config.clientUrls,
       credentials: true,
     },
   });

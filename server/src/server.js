@@ -13,31 +13,26 @@ const startServer = async () => {
     await prisma.$connect();
     console.log('Database connected');
 
-    let currentPort = Number(config.port) || 5000;
+    const currentPort = Number(config.port) || 5000;
+    activeServer = http.createServer(app);
+    initSocket(activeServer);
 
-    const createAndListen = (port) => {
-      activeServer = http.createServer(app);
-      initSocket(activeServer);
-
-      activeServer.on('error', async (error) => {
-        if (error.code === 'EADDRINUSE') {
-          console.log(`Port ${port} is busy, retrying on ${port + 1}...`);
-          activeServer.close();
-          createAndListen(port + 1);
-          return;
-        }
-
+    activeServer.on('error', async (error) => {
+      if (error.code === 'EADDRINUSE') {
+        console.error(
+          `Port ${currentPort} is busy. Set PORT in server/.env and VITE_API_URL in client/.env to the same API origin.`
+        );
+      } else {
         console.error(error);
-        await prisma.$disconnect();
-        process.exit(1);
-      });
+      }
 
-      activeServer.listen(port, () => {
-        console.log(`Server running on port ${port}`);
-      });
-    };
+      await prisma.$disconnect();
+      process.exit(1);
+    });
 
-    createAndListen(currentPort);
+    activeServer.listen(currentPort, () => {
+      console.log(`Server running on port ${currentPort}`);
+    });
     reservationExpiryJob();
   } catch (error) {
     console.error('Failed to start server:', error);

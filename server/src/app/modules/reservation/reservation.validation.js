@@ -1,10 +1,9 @@
 import { z } from 'zod';
 
 const reserve = z.object({
-  body: z.object({
-    dropId: z.string({ message: 'Drop ID is required' }).min(1),
-    userId: z.string({ message: 'User ID is required' }).min(1),
-  }),
+	params: z.object({
+		dropId: z.string().min(1),
+	}),
 });
 
 const purchase = z.object({

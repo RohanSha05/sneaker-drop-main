@@ -12,8 +12,7 @@ const createDrop = catchAsync(async( req, res )=>{
     })
 })
 const getAllDrops = catchAsync(async( req, res )=>{
-    const result = await dropService.getAllDrops()
-    console.log(result)
+    const result = await dropService.getAllDrops();
     sendResponse(res, {
         statusCode: 200,
         success: true,

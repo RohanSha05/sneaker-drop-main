@@ -2,17 +2,21 @@
  import sendResponse from "../../../shared/sendResponse.js";
  import { reservationService } from "./reservation.service.js";
  
- const createReservation = catchAsync(async( req, res )=>{
-    console.log("USER:", req.user);
-	console.log("BODY:", req.body);
-     const result = await reservationService.reserveStock(req.body, req.user)
-     sendResponse(res, {
-         statusCode: 201,
-         success: true,
-         message: "Reservation created successfully",
-         data: result
-     })
- })
+ const createReservation = catchAsync(async (req, res) => {
+		const payload = {
+			dropId: req.params.dropId,
+		};
+
+		const result = await reservationService.reserveStock(payload, req.user);
+
+		sendResponse(res, {
+			statusCode: 201,
+			success: true,
+			message: "Reservation created successfully",
+			data: result,
+		});
+ });
+ 
  const createPurchase = catchAsync(async( req, res )=>{
      const result = await reservationService.createPurchase(req.body, req.user)
      sendResponse(res, {
