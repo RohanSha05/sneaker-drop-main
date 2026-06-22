@@ -20,14 +20,14 @@ const getAllDrops = async () =>{
     const now = new Date();
 
     const result = await prisma.drop.findMany({
-			where: {
-				startsAt: {
-					lte: now,
-				},
-				status: {
-					not: "SOLD_OUT",
-				},
-			},
+			// where: {
+			// 	startsAt: {
+			// 		lte: now,
+			// 	},
+			// 	status: {
+			// 		not: "SOLD_OUT",
+			// 	},
+			// },
 			include: {
 				purchases: {
 					orderBy: {
