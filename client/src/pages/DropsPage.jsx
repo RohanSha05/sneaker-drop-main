@@ -6,7 +6,7 @@ import { fetchDrops, fetchUsers } from "../provider/dropApiProvider.js";
 
 // const CURRENT_USER_ID = "e09afff9-e6ed-4277-8e07-826d8c6cadec";
 
-export function DropsPage() {
+export default function DropsPage() {
 	const [dropUpdates, setDropUpdates] = useState({});
 	const [currentUserId, setCurrentUserId] = useState("");
 

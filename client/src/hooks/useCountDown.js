@@ -5,11 +5,7 @@ const calculateSecondsLeft = (expiresAt) => {
 	return Math.max(0, Math.floor((new Date(expiresAt) - Date.now()) / 1000));
 };
 
-/**
- * Returns seconds remaining until expiresAt.
- * Calls onExpired once when it hits zero.
- */
-export function useCountdown(expiresAt, onExpired) {
+export default function useCountdown(expiresAt, onExpired) {
 	const [secondsLeft, setSecondsLeft] = useState(() =>
 		calculateSecondsLeft(expiresAt),
 	);
