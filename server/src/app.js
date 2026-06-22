@@ -14,6 +14,7 @@ app.use(
 	cors({
 		origin: [
 			"http://localhost:5173",
+			"https://sneaker-drop-main-git-main-rohans-projects-4dad61e9.vercel.app/",
 			"https://sneaker-drop-main-1kex9bsr7-rohans-projects-4dad61e9.vercel.app",
 		],
 		credentials: true,
