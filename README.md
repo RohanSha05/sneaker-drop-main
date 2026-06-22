@@ -36,7 +36,7 @@ Users can reserve sneakers, complete checkout within **60 seconds**, and see sto
 ### Clone & Install
 
 ```bash
-git clone https://github.com/your-username/sneaker-drop.git
+git clone https://github.com/RohanSha05/sneaker-drop-main
 cd sneaker-drop
 
 # backend
