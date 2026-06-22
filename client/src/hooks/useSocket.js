@@ -43,51 +43,42 @@ export function useSocket({
 	useEffect(() => {
 		const sock = getSocket();
 
-		 sock.on("connect", () => {
-				console.log("✅ Connected:", sock.id);
-			});
-
-			sock.on("disconnect", (reason) => {
-				console.log("❌ Disconnected:", reason);
-			});
-
-			sock.on("connect_error", (err) => {
-				console.log("🚨 Connection Error:", err.message);
-			});
-
-			const handleStockUpdated = (data) => {
-				console.log("📦 stock-updated", data);
-				onStockUpdatedRef.current?.(data);
-			};
-
-			const handleReservationExpired = (data) => {
-				console.log("⏰ reservation-expired", data);
-				onReservationExpiredRef.current?.(data);
-			};
-
-			const handlePurchaseConfirmed = (data) => {
-				console.log("💰 purchase-confirmed", data);
-				onPurchaseConfirmedRef.current?.(data);
-			};
-
-			sock.on("stock-updated", handleStockUpdated);
-			sock.on("reservation-expired", handleReservationExpired);
-			sock.on("purchase-confirmed", handlePurchaseConfirmed);
-
-			const currentDropIds = dropIdsKey ? dropIdsKey.split(",") : [];
-
+		const handleStockUpdated = (data) => onStockUpdatedRef.current?.(data);
+		const handleReservationExpired = (data) =>
+			onReservationExpiredRef.current?.(data);
+		const handlePurchaseConfirmed = (data) =>
+			onPurchaseConfirmedRef.current?.(data);
+		const currentDropIds = dropIdsKey ? dropIdsKey.split(",") : [];
+		const joinDropRooms = () => {
 			currentDropIds.forEach((id) => {
 				if (!joinedRooms.current.has(id)) {
 					sock.emit("join-drop", id);
 					joinedRooms.current.add(id);
 				}
 			});
+		};
+		sock.onAny((eventName, data) => {
+			console.log("[Socket] Event received:", eventName, data);
+		});
+		const handleConnect = () => {
+			joinedRooms.current.clear();
+			joinDropRooms();
+		};
 
+		sock.on("connect", handleConnect);
+		sock.on("stock-updated", handleStockUpdated);
+		sock.on("reservation-expired", handleReservationExpired);
+		sock.on("purchase-confirmed", handlePurchaseConfirmed);
+		sock.on("purchase-created", handlePurchaseConfirmed);
+
+		joinDropRooms();
 
 		return () => {
+			sock.off("connect", handleConnect);
 			sock.off("stock-updated", handleStockUpdated);
 			sock.off("reservation-expired", handleReservationExpired);
 			sock.off("purchase-confirmed", handlePurchaseConfirmed);
+			sock.off("purchase-created", handlePurchaseConfirmed);
 		};
 	}, [dropIdsKey]);
 }

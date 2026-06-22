@@ -12,9 +12,12 @@ const initSocket = (httpServer) => {
   });
 
   io.on('connection', (socket) => {
-    socket.on('join-drop', (dropId) => {
-      socket.join(`drop-${dropId}`);
-    });
+      console.log("Client connected:", socket.id);
+
+			socket.on("join-drop", (dropId) => {
+				console.log(`${socket.id} joined ${dropId}`);
+				socket.join(`drop-${dropId}`);
+			});
   });
 
   return io;

@@ -25,37 +25,66 @@ export function DropsPage() {
 		queryFn: fetchUsers,
 	});
 
-	const updateDrop = (dropId, changes) => {
-		setDropUpdates((prev) => ({
-			...prev,
-			[dropId]: {
-				...prev[dropId],
-				...changes,
-			},
-		}));
-	};
-
-	const drops = data.map((drop) => ({
-		...drop,
-		...dropUpdates[drop.id],
+const updateDrop = (dropId, changes) => {
+	if (!dropId) {
+		console.warn("[updateDrop] called with no dropId, skipping");
+		return;
+	}
+	setDropUpdates((prev) => ({
+		...prev,
+		[dropId]: { ...prev[dropId], ...changes },
 	}));
+};
 
-	useSocket({
-		dropIds: drops.map((d) => d.id),
+const drops = data.map((drop) => ({
+	...drop,
+	...dropUpdates[drop.id],
+}));
 
-		onStockUpdated: ({ dropId, availableStock }) => {
-			updateDrop(dropId, { availableStock });
-		},
+useSocket({
+	dropIds: drops.map((d) => d.id),
 
-		onReservationExpired: ({ dropId, availableStock }) => {
-			updateDrop(dropId, { availableStock });
-		},
+	onStockUpdated: (data) => {
+		// Server sends { id, availableStock, status }
+		const dropId = data.id || data.dropId;
+		if (!dropId) return;
+		updateDrop(dropId, {
+			availableStock: data.availableStock,
+			status: data.status,
+		});
+	},
 
-		onPurchaseConfirmed: ({ dropId, topPurchasers }) => {
-			updateDrop(dropId, { recentPurchasers: topPurchasers });
-		},
-	});
+	onReservationExpired: (data) => {
+		// Server sends { id: dropId, availableStock }
+		const dropId = data.id || data.dropId;
+		if (!dropId) return;
+		updateDrop(dropId, {
+			availableStock: data.availableStock,
+			status: data.availableStock > 0 ? "ACTIVE" : "SOLD_OUT",
+		});
+	},
 
+	onPurchaseConfirmed: (data) => {
+		const dropId = data.dropId;
+		if (!dropId) return;
+		if (data.topPurchasers) {
+			updateDrop(dropId, { recentPurchasers: data.topPurchasers });
+			return;
+		}
+		const username = data.user?.username;
+		if (!username) return;
+		setDropUpdates((prev) => {
+			const existing = prev[dropId]?.recentPurchasers || [];
+			return {
+				...prev,
+				[dropId]: {
+					...prev[dropId],
+					recentPurchasers: [username, ...existing].slice(0, 3),
+				},
+			};
+		});
+	},
+});
 	if (isLoading) {
 		return (
 			<div className="max-w-7xl mx-auto px-4 py-10">

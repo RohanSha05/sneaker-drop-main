@@ -99,7 +99,11 @@ const reserveStock = async (payload, user) => {
 				},
 			);
 
-			emitDropUpdate(payload.dropId, "stock-updated", result.drop);
+			emitDropUpdate(payload.dropId, "stock-updated", {
+				id: result.drop.id,
+				availableStock: result.drop.availableStock,
+				status: result.drop.status,
+			});
 			emitDropUpdate(payload.dropId, "reservation-created", result.reservation);
 
 			return result;
@@ -160,7 +164,18 @@ const createPurchase = async (payload, user) => {
 		return purchase;
 	});
 
-	emitDropUpdate(purchase.dropId, "purchase-created", purchase);
+	const topPurchases = await prisma.purchase.findMany({
+		where: { dropId: purchase.dropId },
+		orderBy: { purchasedAt: "desc" },
+		take: 3,
+		include: { user: { select: { username: true } } },
+	});
+
+	emitDropUpdate(purchase.dropId, "purchase-created", {
+		dropId: purchase.dropId,
+		user: purchase.user,
+		topPurchasers: topPurchases.map((p) => p.user.username),
+	});
 
 	return purchase;
 };
@@ -227,10 +242,16 @@ const recoverExpiredReservations = async () => {
 		});
 
 		if (updatedDrop) {
-			emitDropUpdate(reservation.dropId, "reservation-expired", {
-				reservationId: reservation.id,
+			emitDropUpdate(reservation.dropId, "stock-updated", {
+				id: updatedDrop.id,
+				availableStock: updatedDrop.availableStock,
+				status: updatedDrop.status,
 			});
-			emitDropUpdate(reservation.dropId, "stock-updated", updatedDrop);
+			emitDropUpdate(reservation.dropId, "reservation-expired", {
+				id: updatedDrop.id,
+				availableStock: updatedDrop.availableStock,
+				status: updatedDrop.status,
+			});
 			recoveredCount += 1;
 		}
 	}
