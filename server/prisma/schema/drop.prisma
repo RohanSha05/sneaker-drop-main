@@ -4,7 +4,7 @@ model Drop {
   description    String?
   totalStock     Int
   availableStock Int
-  startsAt       DateTime
+  startsAt       DateTime?
   endsAt         DateTime?
   status         DropStatus     @default(SCHEDULED)
   createdAt      DateTime       @default(now())
@@ -13,5 +13,6 @@ model Drop {
   reservations   Reservation[]
   purchases      Purchase[]
 
+  @@index([status, startsAt])
   @@map("drops")
 }

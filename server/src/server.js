@@ -3,38 +3,37 @@ import 'dotenv/config';
 import app from './app.js';
 import prisma from './shared/prisma.js';
 import config from './config/index.js';
+import initSocket from './socket/index.js';
+import reservationExpiryJob from './jobs/reservationExpiry.job.js';
+
+let activeServer;
 
 const startServer = async () => {
   try {
     await prisma.$connect();
     console.log('Database connected');
 
-    let currentPort = Number(config.port) || 5000;
+    const currentPort = Number(config.port) || 5000;
+    activeServer = http.createServer(app);
+    initSocket(activeServer);
 
-    const createAndListen = (port) => {
-      const server = http.createServer(app);
-
-      server.on('error', async (error) => {
-        if (error.code === 'EADDRINUSE') {
-          console.log(`Port ${port} is busy, retrying on ${port + 1}...`);
-          server.close();
-          createAndListen(port + 1);
-          return;
-        }
-
+    activeServer.on('error', async (error) => {
+      if (error.code === 'EADDRINUSE') {
+        console.error(
+          `Port ${currentPort} is busy. Set PORT in server/.env and VITE_API_URL in client/.env to the same API origin.`
+        );
+      } else {
         console.error(error);
-        await prisma.$disconnect();
-        process.exit(1);
-      });
+      }
 
-      server.listen(port, () => {
-        console.log(`Server running on port ${port}`);
-      });
+      await prisma.$disconnect();
+      process.exit(1);
+    });
 
-      return server;
-    };
-
-    createAndListen(currentPort);
+    activeServer.listen(currentPort, () => {
+      console.log(`Server running on port ${currentPort}`);
+    });
+    reservationExpiryJob();
   } catch (error) {
     console.error('Failed to start server:', error);
     await prisma.$disconnect();
@@ -44,6 +43,11 @@ const startServer = async () => {
 
 const shutdown = async () => {
   await prisma.$disconnect();
+  if (activeServer) {
+    activeServer.close(() => process.exit(0));
+    return;
+  }
+
   process.exit(0);
 };
 
