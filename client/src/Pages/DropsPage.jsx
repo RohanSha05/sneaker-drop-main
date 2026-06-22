@@ -2,12 +2,13 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSocket } from "../hooks/useSocket";
 import { DropCard } from "../components/DropCard";
-import { fetchDrops } from "../provider/dropApiProvider";
+import { fetchDrops, fetchUsers } from "../provider/dropApiProvider";
 
-const CURRENT_USER_ID = "PASTE_YOUR_SEEDED_USER_ID_HERE";
+// const CURRENT_USER_ID = "e09afff9-e6ed-4277-8e07-826d8c6cadec";
 
 export function DropsPage() {
 	const [dropUpdates, setDropUpdates] = useState({});
+	const [currentUserId, setCurrentUserId] = useState("");
 
 	const {
 		data = [],
@@ -17,6 +18,11 @@ export function DropsPage() {
 	} = useQuery({
 		queryKey: ["drops"],
 		queryFn: fetchDrops,
+	});
+
+	const { data: users = [] } = useQuery({
+		queryKey: ["users"],
+		queryFn: fetchUsers,
 	});
 
 	const updateDrop = (dropId, changes) => {
@@ -98,6 +104,29 @@ export function DropsPage() {
 				</div>
 			</section>
 
+			{/* User Selector */}
+			<div className="max-w-7xl mx-auto px-4 -mt-6 mb-6">
+				<div className="bg-base-100 border border-base-300 rounded-2xl p-6 shadow-sm">
+					<h3 className="text-lg font-bold mb-3">Select Current User</h3>
+
+					<select
+						className="select select-bordered w-full md:w-1/2"
+						value={currentUserId}
+						onChange={(e) => setCurrentUserId(e.target.value)}
+					>
+						<option value="" disabled>
+							Choose a user
+						</option>
+
+						{users.map((user) => (
+							<option key={user.id} value={user.id}>
+								{user.username || user.email || user.id}
+							</option>
+						))}
+					</select>
+				</div>
+			</div>
+
 			{/* Stats */}
 			<div className="max-w-7xl mx-auto px-4 -mt-4">
 				<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -155,7 +184,7 @@ export function DropsPage() {
 								key={drop.id}
 								className="transition duration-300 hover:-translate-y-1"
 							>
-								<DropCard drop={drop} userId={CURRENT_USER_ID} />
+								<DropCard drop={drop} userId={currentUserId} />
 							</div>
 						))}
 					</div>

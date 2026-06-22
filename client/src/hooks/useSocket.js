@@ -43,24 +43,46 @@ export function useSocket({
 	useEffect(() => {
 		const sock = getSocket();
 
-		const handleStockUpdated = (data) => onStockUpdatedRef.current?.(data);
-		const handleReservationExpired = (data) =>
-			onReservationExpiredRef.current?.(data);
-		const handlePurchaseConfirmed = (data) =>
-			onPurchaseConfirmedRef.current?.(data);
+		 sock.on("connect", () => {
+				console.log("✅ Connected:", sock.id);
+			});
 
-		sock.on("stock-updated", handleStockUpdated);
-		sock.on("reservation-expired", handleReservationExpired);
-		sock.on("purchase-confirmed", handlePurchaseConfirmed);
+			sock.on("disconnect", (reason) => {
+				console.log("❌ Disconnected:", reason);
+			});
 
-		const currentDropIds = dropIdsKey ? dropIdsKey.split(",") : [];
+			sock.on("connect_error", (err) => {
+				console.log("🚨 Connection Error:", err.message);
+			});
 
-		currentDropIds.forEach((id) => {
-			if (!joinedRooms.current.has(id)) {
-				sock.emit("join-drop", id);
-				joinedRooms.current.add(id);
-			}
-		});
+			const handleStockUpdated = (data) => {
+				console.log("📦 stock-updated", data);
+				onStockUpdatedRef.current?.(data);
+			};
+
+			const handleReservationExpired = (data) => {
+				console.log("⏰ reservation-expired", data);
+				onReservationExpiredRef.current?.(data);
+			};
+
+			const handlePurchaseConfirmed = (data) => {
+				console.log("💰 purchase-confirmed", data);
+				onPurchaseConfirmedRef.current?.(data);
+			};
+
+			sock.on("stock-updated", handleStockUpdated);
+			sock.on("reservation-expired", handleReservationExpired);
+			sock.on("purchase-confirmed", handlePurchaseConfirmed);
+
+			const currentDropIds = dropIdsKey ? dropIdsKey.split(",") : [];
+
+			currentDropIds.forEach((id) => {
+				if (!joinedRooms.current.has(id)) {
+					sock.emit("join-drop", id);
+					joinedRooms.current.add(id);
+				}
+			});
+
 
 		return () => {
 			sock.off("stock-updated", handleStockUpdated);

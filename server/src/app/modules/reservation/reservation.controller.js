@@ -6,7 +6,6 @@
 		const payload = {
 			dropId: req.params.dropId,
 		};
-
 		const result = await reservationService.reserveStock(payload, req.user);
 
 		sendResponse(res, {
@@ -16,16 +15,21 @@
 			data: result,
 		});
  });
- 
- const createPurchase = catchAsync(async( req, res )=>{
-     const result = await reservationService.createPurchase(req.body, req.user)
-     sendResponse(res, {
-         statusCode: 200,
-         success: true,
-         message: "Purchase completed successfully",
-         data: result
-     })
- })
+
+ const createPurchase = catchAsync(async (req, res) => {
+		const payload = {
+			reservationId: req.params.reservationId,
+		};
+		const result = await reservationService.createPurchase(payload, req.user);
+		sendResponse(res, {
+			statusCode: 200,
+			success: true,
+			message: "Purchase completed successfully",
+			data: result,
+		});
+ });
+
+
  const getAllReservations = catchAsync(async( req, res )=>{
      const result = await reservationService.getAllReservations()
      sendResponse(res, {

@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 const reserve = z.object({
 	params: z.object({
@@ -7,12 +7,12 @@ const reserve = z.object({
 });
 
 const purchase = z.object({
-  body: z.object({
-    reservationId: z.string({ message: 'Reservation ID is required' }).min(1),
-  }),
+	params: z.object({
+		reservationId: z.string({ message: "Reservation ID is required" }).min(1),
+	}),
 });
 
 export const ReservationValidation = {
-  reserve,
-  purchase,
+	reserve,
+	purchase,
 };

@@ -6,6 +6,7 @@ import { purchaseItem, reserveItem } from "../provider/dropApiProvider";
 export function ReserveButton({ drop, userId }) {
 	const [status, setStatus] = useState("idle");
 	const [expiresAt, setExpiresAt] = useState(null);
+	const [reservationId, setReservationId] = useState(null);
 
 	const handleReserve = async () => {
 		setStatus("reserving");
@@ -14,10 +15,10 @@ export function ReserveButton({ drop, userId }) {
 				dropId: drop.id,
 				userId,
 			});
-			console.log(data);
-			setExpiresAt(data.expiresAt);
+			const reservation = data?.data.reservation;
+			setExpiresAt(reservation.expiresAt);
+			setReservationId(reservation.id);
 			setStatus("reserved");
-
 			alertSuccess("Reserved! You have 60 seconds to complete your purchase.");
 		} catch (err) {
 			setStatus("idle");
@@ -28,10 +29,9 @@ export function ReserveButton({ drop, userId }) {
 
 	const handlePurchase = async () => {
 		setStatus("purchasing");
-
 		try {
 			await purchaseItem({
-				dropId: drop.id,
+				reservationId,
 				userId,
 			});
 

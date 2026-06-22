@@ -8,11 +8,17 @@ const router = express.Router();
 
 router.post(
 	"/drops/:dropId/reserve",
-	// auth(),
+	auth(),
 	validateRequest(ReservationValidation.reserve),
 	reservationController.createReservation,
 );
-router.post('/purchase', auth(), validateRequest(ReservationValidation.purchase), reservationController.createPurchase);
+router.post(
+	"/:reservationId/purchase",
+	auth(),
+	validateRequest(ReservationValidation.purchase),
+	reservationController.createPurchase,
+);
+
 router.get('/', reservationController.getAllReservations);
 
 export const reservationRoutes = router;
