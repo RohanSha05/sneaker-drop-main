@@ -2,6 +2,7 @@ import { DropsPage } from "./pages/DropsPage";
 
 function App() {
 	return (
+		//folder_naming_issue_updated
 		<div className="min-h-screen bg-base-200">
 			<div className="max-w-5xl mx-auto px-4 py-8">
 				<header className="mb-8">
