@@ -11,10 +11,13 @@ const app = express();
 
 app.use(cookieParser());
 app.use(
-  cors({
-    origin: config.clientUrls,
-    credentials: true,
-  })
+	cors({
+		origin: [
+			"http://localhost:5173",
+			"https://sneaker-drop-main-1kex9bsr7-rohans-projects-4dad61e9.vercel.app",
+		],
+		credentials: true,
+	}),
 );
 
 app.use(express.json());

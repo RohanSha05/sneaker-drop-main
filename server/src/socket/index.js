@@ -5,11 +5,14 @@ let io;
 
 const initSocket = (httpServer) => {
   io = new Server(httpServer, {
-    cors: {
-      origin: config.clientUrls,
-      credentials: true,
-    },
-  });
+		cors: {
+			origin: [
+				"http://localhost:5173",
+				"https://sneaker-drop-main-1kex9bsr7-rohans-projects-4dad61e9.vercel.app",
+			],
+			credentials: true,
+		},
+	});
 
   io.on('connection', (socket) => {
       console.log("Client connected:", socket.id);
