@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useSocket } from "../hooks/useSocket";
-import { DropCard } from "../components/DropCard";
-import { fetchDrops, fetchUsers } from "../provider/dropApiProvider";
+import { useSocket } from "../hooks/useSocket.js";
+import { DropCard } from "../components/DropCard.jsx";
+import { fetchDrops, fetchUsers } from "../provider/dropApiProvider.js";
 
 // const CURRENT_USER_ID = "e09afff9-e6ed-4277-8e07-826d8c6cadec";
 

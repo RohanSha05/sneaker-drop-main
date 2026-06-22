@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useCountdown } from "../hooks/useCountdown";
-import { alertSuccess, alertError, alertWarning } from "../lib/alert";
-import { purchaseItem, reserveItem } from "../provider/dropApiProvider";
+import { useCountdown } from "../hooks/useCountdown.js";
+import { alertSuccess, alertError, alertWarning } from "../lib/alert.js";
+import { purchaseItem, reserveItem } from "../provider/dropApiProvider.js";
 
 export function ReserveButton({ drop, userId }) {
 	const [status, setStatus] = useState("idle");

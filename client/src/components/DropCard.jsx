@@ -1,4 +1,4 @@
-import { ReserveButton } from "./ReserveButton";
+import { ReserveButton } from "./ReserveButton.jsx";
 
 export function DropCard({ drop, userId }) {
 	const stockPercentage = (drop.availableStock / drop.totalStock) * 100;
