@@ -1,6 +1,5 @@
 import { useState } from "react";
-// import { useCountdown } from "../hooks/useCountdown.js";
-import {useCountdown} from "../hooks/useCountDown.js"
+import useCountdown from "../hooks/useCountDown.js";
 import { alertSuccess, alertError, alertWarning } from "../lib/alert.js";
 import { purchaseItem, reserveItem } from "../provider/dropApiProvider.js";
 
