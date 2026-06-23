@@ -17,24 +17,43 @@ async function main() {
   await prisma.user.deleteMany();
 
   const user = await prisma.user.create({
-    data: {
-      username: 'admin',
-      email: 'admin@example.com',
-      password: 'password123',
-    },
-  });
+		data: {
+			username: "admin",
+			email: "admin@example1.com",
+			password: "password123",
+		},
+		data: {
+			username: "admin-02",
+			email: "admin@example2.com",
+			password: "password123",
+		},
+		data: {
+			username: "admin-03",
+			email: "admin@example3.com",
+			password: "password123",
+		},
+	});
 
-  const drop = await prisma.drop.create({
-    data: {
-      title: 'Nike Dunk Low Panda',
-      description: 'Limited sneaker drop',
-      totalStock: 100,
-      availableStock: 100,
-      status: 'ACTIVE',
-      startsAt: new Date(Date.now() - 3600_000),
-      endsAt: new Date(Date.now() + 86_400_000),
-    },
-  });
+	const drop = await prisma.drop.create({
+		data: {
+			title: "Nike Dunk Low Panda",
+			description: "Limited sneaker drop",
+			totalStock: 100,
+			availableStock: 100,
+			status: "ACTIVE",
+			startsAt: new Date(Date.now() - 3600_000),
+			endsAt: new Date(Date.now() + 86_400_000),
+		},
+		data: {
+			title: "Nike Dunk Low Panda 2",
+			description: "Limited sneaker drop",
+			totalStock: 200,
+			availableStock: 170,
+			status: "ACTIVE",
+			startsAt: new Date(Date.now() - 3600_000),
+			endsAt: new Date(Date.now() + 86_400_000),
+		},
+	});
 
   const reservation = await prisma.reservation.create({
     data: {
