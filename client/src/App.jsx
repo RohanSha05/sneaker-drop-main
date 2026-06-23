@@ -1,4 +1,4 @@
-import DropsPage from "./Pages/DropsPage.jsx";
+import DropsPage from "./pages/DropsPage.jsx";
 
 function App() {
 	return (
