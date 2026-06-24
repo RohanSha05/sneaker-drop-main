@@ -45,7 +45,6 @@ useSocket({
 	dropIds: drops.map((d) => d.id),
 
 	onStockUpdated: (data) => {
-		// Server sends { id, availableStock, status }
 		const dropId = data.id || data.dropId;
 		if (!dropId) return;
 		updateDrop(dropId, {
@@ -55,7 +54,6 @@ useSocket({
 	},
 
 	onReservationExpired: (data) => {
-		// Server sends { id: dropId, availableStock }
 		const dropId = data.id || data.dropId;
 		if (!dropId) return;
 		updateDrop(dropId, {
@@ -112,7 +110,6 @@ useSocket({
 
 	return (
 		<div className="min-h-screen bg-gradient-to-b from-base-100 via-base-100 to-base-200">
-			{/* Hero */}
 			<section className="relative overflow-hidden">
 				<div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10" />
 
@@ -133,7 +130,6 @@ useSocket({
 				</div>
 			</section>
 
-			{/* User Selector */}
 			<div className="max-w-7xl mx-auto px-4 -mt-6 mb-6">
 				<div className="bg-base-100 border border-base-300 rounded-2xl p-6 shadow-sm">
 					<h3 className="text-lg font-bold mb-3">Select Current User</h3>
@@ -156,7 +152,6 @@ useSocket({
 				</div>
 			</div>
 
-			{/* Stats */}
 			<div className="max-w-7xl mx-auto px-4 -mt-4">
 				<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
 					<div className="bg-base-100 border border-base-300 rounded-2xl p-5 shadow-sm">
@@ -183,7 +178,6 @@ useSocket({
 				</div>
 			</div>
 
-			{/* Empty State */}
 			{drops.length === 0 ? (
 				<div className="max-w-xl mx-auto px-4 py-24">
 					<div className="bg-base-100 rounded-3xl border border-base-300 p-10 text-center shadow-lg">

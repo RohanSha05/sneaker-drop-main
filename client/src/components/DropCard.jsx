@@ -12,11 +12,9 @@ export function DropCard({ drop, userId }) {
 
 	return (
 		<div className="group relative overflow-hidden rounded-3xl border border-base-300 bg-base-100 shadow-md transition-all duration-300">
-			{/* Glow Effect */}
 			<div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
 			<div className="relative p-6">
-				{/* Top Section */}
 				<div className="flex items-start justify-between gap-3">
 					<div>
 						<div className="badge badge-outline badge-sm mb-3">LIVE DROP</div>
@@ -43,10 +41,8 @@ export function DropCard({ drop, userId }) {
 					</div>
 				</div>
 
-				{/* Divider */}
 				<div className="divider my-5" />
 
-				{/* Stock Stats */}
 				<div className="space-y-3">
 					<div className="flex justify-between text-sm">
 						<span className="text-base-content/60">Available Stock</span>
@@ -65,14 +61,12 @@ export function DropCard({ drop, userId }) {
 					</div>
 				</div>
 
-				{/* Description */}
 				{drop.description && (
 					<p className="mt-5 text-sm text-base-content/70 leading-relaxed">
 						{drop.description}
 					</p>
 				)}
 
-				{/* Purchasers */}
 				<div className="mt-5 rounded-2xl bg-base-200/70 p-4">
 					<p className="text-xs uppercase tracking-wider text-base-content/50 mb-2">
 						Recent Purchasers
@@ -99,7 +93,6 @@ export function DropCard({ drop, userId }) {
 					)}
 				</div>
 
-				{/* Footer */}
 				<div className="mt-6">
 					<ReserveButton drop={drop} userId={userId} />
 				</div>

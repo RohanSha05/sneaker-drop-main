@@ -9,9 +9,7 @@ export default function useCountdown(expiresAt, onExpired) {
 	const [secondsLeft, setSecondsLeft] = useState(() =>
 		calculateSecondsLeft(expiresAt),
 	);
-	const onExpiredRef = useRef(onExpired); // stable ref so effect doesn't re-run
-
-	// Keep ref in sync without re-triggering the effect
+	const onExpiredRef = useRef(onExpired);
 	useEffect(() => {
 		onExpiredRef.current = onExpired;
 	}, [onExpired]);
@@ -48,7 +46,7 @@ export default function useCountdown(expiresAt, onExpired) {
 			clearTimeout(initialUpdate);
 			clearInterval(interval);
 		};
-	}, [expiresAt]); // only re-runs if expiresAt changes
+	}, [expiresAt]); 
 
 	return secondsLeft;
 }

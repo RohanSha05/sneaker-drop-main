@@ -13,9 +13,8 @@ const config = {
 	nodeEnv: process.env.NODE_ENV || "development",
 	clientUrl: clientUrls[0],
 	clientUrls,
-	clientOrigins: clientUrls, // or use CLIENT_ORIGINS separately
+	clientOrigins: clientUrls,
 	databaseUrl: process.env.DATABASE_URL,
 	jwtSecret: process.env.JWT_SECRET || "abcd",
 };
 
-export default config;

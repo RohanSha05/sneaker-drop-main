@@ -1,6 +1,5 @@
 import Swal from 'sweetalert2';
 
-// Base toast — small, non-blocking, auto-dismisses
 const Toast = Swal.mixin({
   toast: true,
   position: 'top-end',
@@ -25,7 +24,6 @@ export const alertWarning = (message) =>
 export const alertInfo = (message) =>
   Toast.fire({ icon: 'info', title: message });
 
-// Blocking confirm dialog — for destructive or irreversible actions
 export const alertConfirm = ({ title, text, confirmText = 'Yes', cancelText = 'Cancel' }) =>
   Swal.fire({
     title,

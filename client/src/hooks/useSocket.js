@@ -25,7 +25,6 @@ export function useSocket({
 	const joinedRooms = useRef(new Set());
 	const dropIdsKey = dropIds.join(",");
 
-	// Keep callbacks in refs so the effect doesn't re-run when they change
 	const onStockUpdatedRef = useRef(onStockUpdated);
 	const onReservationExpiredRef = useRef(onReservationExpired);
 	const onPurchaseConfirmedRef = useRef(onPurchaseConfirmed);
